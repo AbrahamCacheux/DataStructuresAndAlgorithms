@@ -26,23 +26,19 @@ class LinkedList:
         self.size += 1
         return mynode
 
-    # Exercise 1: Deleting a node from a linked list: Given a linked list and a value,
-    # write a function to delete all nodes containing that value.
     def remove(self, value):
         if self.size == 0:
             return False
         else:
             current = self.first
-            while current.next.value != value:
-                if current.next is None:
-                    return False
-                else:
-                    current = current.next
-            deleted_node = current.next
-            current.next = deleted_node.next
-
-        self.size -= 1
-        return deleted_node
+            while current.next:
+                if current.next.value == value:
+                    deleted_node = current.next
+                    current.next = deleted_node.next
+                    self.size -= 1
+                    return deleted_node
+                current = current.next
+            return False
 
     def __len__(self):
         return self.size
@@ -52,7 +48,8 @@ class LinkedList:
         current = self.first
         while current is not None:
             string += str(current)
-            string += str(" -> ")
+            if current.next:
+                string += " -> "
             current = current.next
         string += "]"
         return string
@@ -67,12 +64,42 @@ class LinkedList:
             current = next
         self.first = prev
 
+    def is_palindrome(self):
+        if not self.first:
+            return True
+
+        # Find the middle of the linked list
+        slow = fast = self.first
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # Reverse the second half of the linked list
+        prev = None
+        while slow:
+            temp = slow.next
+            slow.next = prev
+            prev = slow
+            slow = temp
+
+        # Compare the first half with the reversed second half
+        first_half = self.first
+        second_half = prev
+        while second_half:
+            if first_half.value != second_half.value:
+                return False
+            first_half = first_half.next
+            second_half = second_half.next
+        return True
+
+
 
 my_list = LinkedList()
 my_list.append(1)
 my_list.append(2)
 my_list.append(3)
 my_list.append(4)
+
 print(my_list)
 my_list.remove(3)
 print(my_list)
